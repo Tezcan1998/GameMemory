@@ -36,6 +36,7 @@ public class Logined extends JFrame {
 
 	private JPanel contentPane;
 	private Main main;
+	private User user;
 	private JTextField textFieldName;
 	private JTextField textFieldSurname;
 	private JTextField textFieldNickname;
@@ -45,40 +46,25 @@ public class Logined extends JFrame {
 	private JLabel lblDisplayedName,lblDisplayedNickname,lblDisplayedSurname,lblDisplayedAge,lblDisplayedCountry,lblDisplayedMail;
 	
 	
-	private int userID;
+	private JTextField textFieldCountry;
 
 	public void updateProfilInfo() throws SQLException, ClassNotFoundException {
-		try {
-			Class.forName("org.sqlite.JDBC");
-			Connection con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ASUS\\workspace\\GameMemory\\SQLite\\gamedb.sqlite");
-			Statement st=(Statement) con.createStatement();
-			ResultSet rs = st.executeQuery("select * from users");
-	        while(rs.next())
-	        {
-		        if(rs.getInt("UserId")==userID)	
-		        {
-		        	
-		        	lblDisplayedName.setText(rs.getString("UserName"));
-		        	lblDisplayedNickname.setText(rs.getString("UserNickName"));
-		        	lblDisplayedSurname.setText(rs.getString("UserSurname"));
-		        	lblDisplayedAge.setText(Integer.toString(rs.getInt("UserAge")));
-		        	lblDisplayedCountry.setText(rs.getString("UserCountry"));
-		        	lblDisplayedMail.setText(rs.getString("UserMail"));
-		        	
-		        	
-		        	///yukardakinin benzeri buraya yapýlsýn 
+		
+		        	lblDisplayedName.setText(user.getName());
+		        	lblDisplayedNickname.setText(user.getNickname());
+		        	lblDisplayedSurname.setText(user.getSurname());
+		        	lblDisplayedAge.setText(Integer.toString(user.getAge()));
+		        	lblDisplayedCountry.setText(user.getCountry());
+		        	lblDisplayedMail.setText(user.getMail());
+	
 		        	textFieldName.setText(rs.getString("UserName"));
-		        	
-		        }
-	          
-	          System.out.println("name = " + rs.getString("name"));
-	          System.out.println("id = " + rs.getInt("id"));
-	        }
-		}
-		catch(Exception ex)
-		{
-			
-		}
+		        	textFieldNickname.setText(rs.getString("UserNickName"));
+		        	textFieldSurname.setText(rs.getString("UserSurname"));
+		        	textFieldAge.setText(Integer.toString(rs.getInt("UserAge")));
+		        	textFieldCountry.setText(rs.getString("UserCountry"));
+		        	textFieldMail.setText(rs.getString("UserMail"));
+		
+	 
 		
 	}
 	
@@ -87,9 +73,10 @@ public class Logined extends JFrame {
 		//elleme
 	}
 	
-	public Logined(Main _main, int tempId) throws ClassNotFoundException, SQLException {
+	public Logined(Main _main, User user) throws ClassNotFoundException, SQLException {
+		this.user=user;
 		this.main=_main;
-		userID=tempId;
+		
 		
 		main.setVisible(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -229,6 +216,15 @@ public class Logined extends JFrame {
 		textFieldPassword.setColumns(10);
 		textFieldPassword.setBounds(288, 100, 86, 20);
 		panel_2.add(textFieldPassword);
+		
+		textFieldCountry = new JTextField();
+		textFieldCountry.setColumns(10);
+		textFieldCountry.setBounds(75, 135, 86, 20);
+		panel_2.add(textFieldCountry);
+		
+		JLabel lblCountry_1 = new JLabel("Country  :");
+		lblCountry_1.setBounds(10, 138, 59, 21);
+		panel_2.add(lblCountry_1);
 		
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("High Scores", null, panel_3, null);

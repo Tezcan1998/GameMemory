@@ -33,6 +33,10 @@ public class SignUp extends JFrame {
 	private JTextField textFieldAge;
 	private JComboBox comboBoxMailType;
 	
+	SignUp getReference()
+	{
+		return this;
+	}
 	
 	@SuppressWarnings("deprecation")
 	//TODO: configure the checkBoxes(), it will check all boxes if they are empty or not.
@@ -78,12 +82,12 @@ public class SignUp extends JFrame {
 				try{
 					
 					Class.forName("org.sqlite.JDBC");
-					Connection con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ASUS\\workspace\\GameMemory\\SQLite\\gamedb.sqlite");
+					Connection con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Can\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
 					System.out.println("Con Durum :"+con);
 					Statement st=(Statement) con.createStatement();
 					
 					
-		          String sql = "INSERT INTO users(UserNickname,UserPassword,UserName,UserSurname,UserAge,UserCountry,UserMail) "
+		          String sql = "INSERT INTO players(UserNickname,UserPassword,UserName,UserSurname,UserAge,UserCountry,UserMail) "
 		          		+ "VALUES ('"+textFieldNick.getText()+"','"+String.valueOf(passwordFieldFirst.getPassword())+"','"+textFieldName.getText()+"',"
 		          				+ "'"+textFieldSurname.getText()+"','"+textFieldAge.getText()+"','"+textFieldCountry.getText()+"',"
 		          						+ "'"+(textFieldMail.getText()+"@"+comboBoxMailType.getSelectedItem().toString())+"')";
@@ -109,10 +113,6 @@ public class SignUp extends JFrame {
 	}
 	
 	
-	SignUp getReference()
-	{
-		return this;
-	}
 	
 	void cleanUserAndPasswordBoxes()
 	{

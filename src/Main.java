@@ -27,71 +27,12 @@ public class Main extends JFrame {
 	private JPasswordField passwordFieldUser;
 	private boolean status=false;
 	private JCheckBox checkBoxAdmin;
+	private SQLiteConnection db;
 	
 	Main getReference()
 	{
 		return this;
 	}
-	
-	
-	
-	public int connectStudentDB(String nickname,String password){
-		int id=-1;
-    	try{
-    		Class.forName("org.sqlite.JDBC");
-            
-            Connection con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ASUS\\workspace\\GameMemory\\SQLite\\gamedb.sqlite");
-            Statement st=(Statement) con.createStatement();
-            String sql = ("select * from users;");
-            ResultSet rs = st.executeQuery(sql);
-	            while(rs.next()) {
-	            	if(nickname.equals(rs.getString("UserNickname")) && password.equals(rs.getString("UserPassword")))
-	            	{
-	            		
-	                    this.status=true;
-	                    id= rs.getInt("UserId");
-	                    break;
-	                    
-	            	}
-	            	
-	            }
-            
-        	}
-        	catch(Exception e){
-             e.printStackTrace();
-        	}
-		return id;
-
-    }
-	
-	public int connectAdminDB(String nickname,String password){
-		int id=-1;
-    	try{
-    		Class.forName("org.sqlite.JDBC");
-           
-            Connection con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ASUS\\workspace\\GameMemory\\SQLite\\gamedb.sqlite");
-            Statement st=(Statement) con.createStatement();
-            String sql = ("select * from admins;");
-            ResultSet rs = st.executeQuery(sql);
-	            while(rs.next()) {
-	            	if(nickname.equals(rs.getString("AdminNickname")) && password.equals(rs.getString("AdminPassword")))
-	            	{
-	            		
-	                    this.status=true;
-	                    id= rs.getInt("AdminId");
-	                    break;
-	                    
-	            	}
-	            	
-	            }
-            
-        	}
-        	catch(Exception e){
-             e.printStackTrace();
-        	}
-		return id;
-
-    }
 	
 	
 	
@@ -111,6 +52,7 @@ public class Main extends JFrame {
 
 
 	public Main() {
+	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 518, 333);
 		contentPane = new JPanel();
@@ -135,15 +77,16 @@ public class Main extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			//	System.out.println(textFieldUsername.getText()+"   "+String.valueOf(passwordFieldUser.getPassword()));
-				int tempId;
 				
 				if(checkBoxAdmin.isSelected())
 				{
-					tempId=connectAdminDB(getTextFieldUsername().getText(),String.valueOf(getPasswordFieldUser().getPassword()));
-					if(tempId!=-1)
+					db=new AdminConnection(new Admin());
+					
+					System.out.println("here");
+					if(db.connectSQLite(getTextFieldUsername().getText(), String.valueOf(getPasswordFieldUser().getPassword())))
 					{
 						JOptionPane.showMessageDialog(null,"Access Successfull");
-						AdminPage mainpage=new AdminPage(getReference(),tempId);
+						AdminPage mainpage=new AdminPage(getReference(),db.getUser());
 						mainpage.setVisible(true);
 					}
 					else
@@ -153,13 +96,14 @@ public class Main extends JFrame {
 				}
 				else
 				{
-				    tempId=connectStudentDB(getTextFieldUsername().getText(),String.valueOf(getPasswordFieldUser().getPassword()));
-					if(tempId!=-1)
+					db=new PlayerConnection(new Player());
+				   
+					if(db.connectSQLite(getTextFieldUsername().getText(), String.valueOf(getPasswordFieldUser().getPassword())))
 					{
 						JOptionPane.showMessageDialog(null,"Access Successfull");
 						Logined mainpage = null;
 						try {
-							mainpage = new Logined(getReference(),tempId);
+							mainpage = new Logined(getReference(),db.getUser());
 						} catch (ClassNotFoundException | SQLException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
