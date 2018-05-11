@@ -4,14 +4,16 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class PlayerConnection extends SQLiteConnection{
-
+	private static Connection con;
 	
 	public PlayerConnection() {
 		super();
 		
+		
 	}
 	public PlayerConnection(User user) {
 		super(user);
+		
 		
 	}
 	public boolean connectSQLite(String nickname, String password) {
@@ -19,7 +21,8 @@ public class PlayerConnection extends SQLiteConnection{
     	try{
     		Class.forName("org.sqlite.JDBC");
             
-            Connection con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\CAN\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
+    		con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\CAN\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
+            System.out.println("first con :"+con);
             Statement st=(Statement) con.createStatement();
             String sql = ("select * from players;");
             ResultSet rs = st.executeQuery(sql);
@@ -42,7 +45,10 @@ public class PlayerConnection extends SQLiteConnection{
 	            	}
 	            	
 	            }
-            
+	           
+	        rs.close();
+            st.close();
+	        con.close();
         	}
         	catch(Exception e){
              e.printStackTrace();
@@ -50,6 +56,39 @@ public class PlayerConnection extends SQLiteConnection{
 	
 		return playerIsFound;
 	}
+	
+	public void updateProfile(User user,String password) {
+		
+		Statement st=null;
+		String sql=null;
+		try{
+	    		Class.forName("org.sqlite.JDBC");
+	    		con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\CAN\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
+	    		 System.out.println("first con :"+con);
+	    		 
+	    		st=(Statement) con.createStatement();
+	    		if(password.equals(""))
+	    		{
+	                sql = ("update players set UserNickname='"+user.getNickname()+"', UserName='"+user.getName()+"',UserSurname='"+user.getSurname()+"',UserAge='"+user.getAge()+"',UserCountry='"+user.getCountry()+"',UserMail='"+user.getMail()+"'");
+	
+	    		}
+	    		else
+	    		{
+	                sql = ("update players set UserNickname='"+user.getNickname()+"', UserName='"+user.getName()+"',UserSurname='"+user.getSurname()+"',UserPassword='"+password+"',UserAge='"+user.getAge()+"',UserCountry='"+user.getCountry()+"',UserMail='"+user.getMail()+"'");
+	
+	    		}
+	    		
+	    			st.executeUpdate(sql);
+	    			
+	    		
+	    			
+        	}
+        	catch(Exception e){
+             e.printStackTrace();
+        	}
+		
+	}
+	
 	
 	
 

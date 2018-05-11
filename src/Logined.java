@@ -48,7 +48,7 @@ public class Logined extends JFrame {
 	
 	private JTextField textFieldCountry;
 
-	public void updateProfilInfo() throws SQLException, ClassNotFoundException {
+	public void updateProfilInfo()  {
 		
 		        	lblDisplayedName.setText(user.getName());
 		        	lblDisplayedNickname.setText(user.getNickname());
@@ -56,21 +56,30 @@ public class Logined extends JFrame {
 		        	lblDisplayedAge.setText(Integer.toString(user.getAge()));
 		        	lblDisplayedCountry.setText(user.getCountry());
 		        	lblDisplayedMail.setText(user.getMail());
-	
-		        	textFieldName.setText(rs.getString("UserName"));
-		        	textFieldNickname.setText(rs.getString("UserNickName"));
-		        	textFieldSurname.setText(rs.getString("UserSurname"));
-		        	textFieldAge.setText(Integer.toString(rs.getInt("UserAge")));
-		        	textFieldCountry.setText(rs.getString("UserCountry"));
-		        	textFieldMail.setText(rs.getString("UserMail"));
-		
+		        	
+		        	textFieldName.setText(user.getName());
+		        	textFieldNickname.setText(user.getNickname());
+		        	textFieldSurname.setText(user.getSurname());
+		        	textFieldAge.setText(Integer.toString(user.getAge()));
+		        	textFieldCountry.setText(user.getCountry());
+		        	textFieldMail.setText(user.getMail());
+		        	textFieldPassword.setText("");
 	 
 		
 	}
 	
-	public void updateChanges()
+	public void updateChanges() throws ClassNotFoundException, SQLException
 	{
-		//elleme
+		user.setName(textFieldName.getText());
+		user.setSurname(textFieldSurname.getText());
+		user.setNickname(textFieldNickname.getText());
+		user.setAge(Integer.parseInt(textFieldAge.getText()));
+		user.setMail(textFieldMail.getText());
+		user.setCountry(textFieldCountry.getText());
+		updateProfilInfo();
+		SQLiteConnection db=new PlayerConnection();
+		db.updateProfile(user,textFieldPassword.getText() );
+		
 	}
 	
 	public Logined(Main _main, User user) throws ClassNotFoundException, SQLException {
@@ -163,8 +172,12 @@ public class Logined extends JFrame {
 		JButton btnNewButton = new JButton("Update");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				updateChanges();
+			try {
+					updateChanges();
+				} catch (ClassNotFoundException | SQLException e1) {
+					
+					e1.printStackTrace();
+				}
 			}
 
 			

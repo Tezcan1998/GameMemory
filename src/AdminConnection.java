@@ -4,7 +4,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class AdminConnection extends SQLiteConnection {
-
+	private static Connection con;
+	
 	public AdminConnection() {
 		super();
 		
@@ -19,7 +20,7 @@ public class AdminConnection extends SQLiteConnection {
     	try{
     		Class.forName("org.sqlite.JDBC");
            
-            Connection con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\CAN\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
+            con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\CAN\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
             Statement st=(Statement) con.createStatement();
             String sql = ("select * from admins;");
             ResultSet rs = st.executeQuery(sql);
@@ -43,12 +44,44 @@ public class AdminConnection extends SQLiteConnection {
 	            	
 	            }
             
+	            rs.close();
+	            st.close();
+		        con.close();
+        	}
+        	catch(Exception e){
+             e.printStackTrace();
+        	}
+			
+		return adminIsFound;
+	}
+
+	public void updateProfile(User user,String password) {
+
+		Statement st=null;
+		String sql=null;
+		try{
+	    		Class.forName("org.sqlite.JDBC");
+	            con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\CAN\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
+	            st=(Statement) con.createStatement();
+	    		if(password.equals(""))
+	    		{
+	                sql = ("update admins set AdminNickname='"+user.getNickname()+"', AdminName='"+user.getName()+"',AdminSurname='"+user.getSurname()+"',AdminAge='"+user.getAge()+"',AdminCountry='"+user.getCountry()+"',AdminMail='"+user.getMail()+"'");
+	
+	    		}
+	    		else
+	    		{
+	                sql = ("update admins set AdminNickname='"+user.getNickname()+"', AdminName='"+user.getName()+"',AdminSurname='"+user.getSurname()+"',AdminPassword='"+password+"',AdminAge='"+user.getAge()+"',AdminCountry='"+user.getCountry()+"',AdminMail='"+user.getMail()+"'");
+	
+	    		}
+	    		
+	    			st.executeUpdate(sql);
+	    			
+            
         	}
         	catch(Exception e){
              e.printStackTrace();
         	}
 		
-		return adminIsFound;
 	}
 	
 	

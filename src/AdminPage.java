@@ -9,6 +9,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class AdminPage extends JFrame {
 
@@ -18,14 +20,16 @@ public class AdminPage extends JFrame {
 	private JTextField textFieldName;
 	private JTextField textFieldSurname;
 	private JTextField textFieldNickname;
-	private JTextField textFieldPasswod;
+	private JTextField textFieldPassword;
 	private JTextField textFieldAge;
+	private JTextField textFieldCountry;
 	private JTextField textFieldMail;
-	private JLabel lblDisplayedName;
+	private JLabel lblDisplayedName,lblDisplayedNickname,lblDisplayedSurname,lblDisplayedAge,lblDisplayedCountry,lblDisplayedMail;
 	private User user;
 	
 	
-	public void updateProfilInfo() throws SQLException, ClassNotFoundException {
+	
+	public void updateProfilInfo()  {
 		
     	lblDisplayedName.setText(user.getName());
     	lblDisplayedNickname.setText(user.getNickname());
@@ -34,20 +38,30 @@ public class AdminPage extends JFrame {
     	lblDisplayedCountry.setText(user.getCountry());
     	lblDisplayedMail.setText(user.getMail());
 
-    	textFieldName.setText(rs.getString("UserName"));
-    	textFieldNickname.setText(rs.getString("UserNickName"));
-    	textFieldSurname.setText(rs.getString("UserSurname"));
-    	textFieldAge.setText(Integer.toString(rs.getInt("UserAge")));
-    	textFieldCountry.setText(rs.getString("UserCountry"));
-    	textFieldMail.setText(rs.getString("UserMail"));
-
+    	textFieldName.setText(user.getName());
+    	textFieldNickname.setText(user.getNickname());
+    	textFieldSurname.setText(user.getSurname());
+    	textFieldAge.setText(Integer.toString(user.getAge()));
+    	textFieldCountry.setText(user.getCountry());
+    	textFieldMail.setText(user.getMail());
+    	textFieldPassword.setText("");
 
 
 }
 
 public void updateChanges()
 {
-//elleme
+	
+	user.setName(textFieldName.getText());
+	user.setSurname(textFieldSurname.getText());
+	user.setNickname(textFieldNickname.getText());
+	user.setAge(Integer.parseInt(textFieldAge.getText()));
+	user.setMail(textFieldMail.getText());
+	user.setCountry(textFieldCountry.getText());
+	updateProfilInfo();
+	SQLiteConnection db=new AdminConnection();
+	db.updateProfile(user,textFieldPassword.getText() );
+	
 }
 
 	
@@ -104,23 +118,23 @@ public void updateChanges()
 		lblDisplayedName.setBounds(65, 14, 60, 14);
 		panel_1.add(lblDisplayedName);
 		
-		JLabel lblDisplayedNickname = new JLabel("");
+		lblDisplayedNickname = new JLabel("");
 		lblDisplayedNickname.setBounds(65, 46, 60, 14);
 		panel_1.add(lblDisplayedNickname);
 		
-		JLabel lblDisplayedCountry = new JLabel("");
+		lblDisplayedCountry = new JLabel("");
 		lblDisplayedCountry.setBounds(65, 78, 60, 14);
 		panel_1.add(lblDisplayedCountry);
 		
-		JLabel lblDisplayedSurname = new JLabel("");
+		lblDisplayedSurname = new JLabel("");
 		lblDisplayedSurname.setBounds(274, 14, 60, 14);
 		panel_1.add(lblDisplayedSurname);
 		
-		JLabel lblDisplayedAge = new JLabel("");
+		lblDisplayedAge = new JLabel("");
 		lblDisplayedAge.setBounds(271, 50, 60, 14);
 		panel_1.add(lblDisplayedAge);
 		
-		JLabel lblDisplayedMail = new JLabel("");
+		lblDisplayedMail = new JLabel("");
 		lblDisplayedMail.setBounds(271, 78, 60, 14);
 		panel_1.add(lblDisplayedMail);
 		
@@ -152,6 +166,10 @@ public void updateChanges()
 		label_11.setBounds(195, 88, 59, 21);
 		panel_2.add(label_11);
 		
+		JLabel lblCountry = new JLabel("Country :");
+		lblCountry.setBounds(10, 120, 59, 21);
+		panel_2.add(lblCountry);
+		
 		textFieldName = new JTextField();
 		textFieldName.setColumns(10);
 		textFieldName.setBounds(68, 24, 86, 20);
@@ -167,10 +185,10 @@ public void updateChanges()
 		textFieldNickname.setBounds(68, 88, 86, 20);
 		panel_2.add(textFieldNickname);
 		
-		textFieldPasswod = new JTextField();
-		textFieldPasswod.setColumns(10);
-		textFieldPasswod.setBounds(264, 88, 86, 20);
-		panel_2.add(textFieldPasswod);
+		textFieldPassword = new JTextField();
+		textFieldPassword.setColumns(10);
+		textFieldPassword.setBounds(264, 88, 86, 20);
+		panel_2.add(textFieldPassword);
 		
 		textFieldAge = new JTextField();
 		textFieldAge.setColumns(10);
@@ -182,11 +200,23 @@ public void updateChanges()
 		textFieldMail.setBounds(264, 24, 86, 20);
 		panel_2.add(textFieldMail);
 		
+		textFieldCountry = new JTextField();
+		textFieldCountry.setColumns(10);
+		textFieldCountry.setBounds(68, 120, 86, 20);
+		panel_2.add(textFieldCountry);
+		
 		JButton button = new JButton("Update");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				updateChanges();
+			}
+		});
 		button.setBounds(155, 154, 101, 32);
 		panel_2.add(button);
 		
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("New tab", null, panel_3, null);
+		updateProfilInfo();
 	}
 }
