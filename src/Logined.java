@@ -12,6 +12,7 @@ import javax.swing.JMenu;
 import javax.swing.JLayeredPane;
 import javax.swing.JDesktopPane;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JInternalFrame;
@@ -76,9 +77,10 @@ public class Logined extends JFrame {
 		user.setAge(Integer.parseInt(textFieldAge.getText()));
 		user.setMail(textFieldMail.getText());
 		user.setCountry(textFieldCountry.getText());
-		updateProfilInfo();
 		SQLiteConnection db=new PlayerConnection();
 		db.updateProfile(user,textFieldPassword.getText() );
+		updateProfilInfo();
+		JOptionPane.showMessageDialog(null,"Update Successfull");
 		
 	}
 	

@@ -1,16 +1,20 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class AdminPage extends JFrame {
 
@@ -26,6 +30,20 @@ public class AdminPage extends JFrame {
 	private JTextField textFieldMail;
 	private JLabel lblDisplayedName,lblDisplayedNickname,lblDisplayedSurname,lblDisplayedAge,lblDisplayedCountry,lblDisplayedMail;
 	private User user;
+	private User player;
+	private JTextField textFieldUserName;
+	private JTextField textFieldUserSurname;
+	private JTextField textFieldUserNickname;
+	private JTextField textFieldUserPassword;
+	private JComboBox comboBox;
+	
+	private ArrayList<String> fullinfo;
+	private ArrayList<Integer> id;
+	private AdminConnection db;
+	
+	private int selectedIndex;
+	
+	
 	
 	
 	
@@ -49,7 +67,7 @@ public class AdminPage extends JFrame {
 
 }
 
-public void updateChanges()
+	public void updateChanges()
 {
 	
 	user.setName(textFieldName.getText());
@@ -58,17 +76,48 @@ public void updateChanges()
 	user.setAge(Integer.parseInt(textFieldAge.getText()));
 	user.setMail(textFieldMail.getText());
 	user.setCountry(textFieldCountry.getText());
-	updateProfilInfo();
-	SQLiteConnection db=new AdminConnection();
 	db.updateProfile(user,textFieldPassword.getText() );
+	updateProfilInfo();
+	JOptionPane.showMessageDialog(null,"Update Successfull");
 	
 }
 
 	
+	public void showPlayerProfile()
+	{
+		
+		db.getPlayerInfo(player,id.get(selectedIndex));
+		textFieldUserName.setText(player.getName());
+		textFieldUserSurname.setText(player.getSurname());
+		textFieldUserNickname.setText(player.getNickname());
+		
+		
+	}
+
+	
+	public void updatePlayerProfile()
+	{
+		textFieldUserName.setText("");
+		textFieldUserSurname.setText("");
+		textFieldUserNickname.setText("");
+		textFieldUserPassword.setText("");
+		db.updatePlayerProfile(selectedIndex,player,textFieldUserPassword.getText());
+		
+	}
+	public void loadComboBox()
+	{
+		fullinfo=new ArrayList<String>();
+		id=new ArrayList<Integer>();
+		db.getProfiles(fullinfo, id);
+		comboBox.setModel(new DefaultComboBoxModel(fullinfo.toArray()));
+	}
 	
 	public AdminPage(Main _main, User user) {
+		db=new AdminConnection();
 		this.user=user;
 		this.main=_main;
+		selectedIndex=0;
+		player=new Player();
 		main.setVisible(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -139,7 +188,7 @@ public void updateChanges()
 		panel_1.add(lblDisplayedMail);
 		
 		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("Show User Profile", null, panel_2, null);
+		tabbedPane.addTab("Update Profile", null, panel_2, null);
 		panel_2.setLayout(null);
 		
 		JLabel label_6 = new JLabel("Name :");
@@ -216,7 +265,76 @@ public void updateChanges()
 		panel_2.add(button);
 		
 		JPanel panel_3 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_3, null);
+		tabbedPane.addTab("Edit User Profile", null, panel_3, null);
+		panel_3.setLayout(null);
+		
+		comboBox = new JComboBox();
+		comboBox.setBounds(113, 107, 255, 20);
+		panel_3.add(comboBox);
+		
+		JButton btnShow = new JButton("Show");
+		btnShow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				selectedIndex=comboBox.getSelectedIndex();
+				showPlayerProfile();
+			}
+		});
+		btnShow.setBounds(113, 154, 102, 23);
+		panel_3.add(btnShow);
+		
+		JLabel lblUserName = new JLabel("Name :");
+		lblUserName.setBounds(54, 34, 48, 21);
+		panel_3.add(lblUserName);
+		
+		JLabel lblUserSurname = new JLabel("Surname :");
+		lblUserSurname.setBounds(224, 34, 59, 21);
+		panel_3.add(lblUserSurname);
+		
+		JLabel lblUserNickname = new JLabel("Nickname :");
+		lblUserNickname.setBounds(54, 66, 59, 21);
+		panel_3.add(lblUserNickname);
+		
+		JLabel lblUserPassword = new JLabel("Password :");
+		lblUserPassword.setBounds(224, 66, 59, 21);
+		panel_3.add(lblUserPassword);
+		
+		textFieldUserName = new JTextField();
+		textFieldUserName.setText((String) null);
+		textFieldUserName.setColumns(10);
+		textFieldUserName.setBounds(112, 34, 86, 20);
+		panel_3.add(textFieldUserName);
+		
+		textFieldUserSurname = new JTextField();
+		textFieldUserSurname.setText((String) null);
+		textFieldUserSurname.setColumns(10);
+		textFieldUserSurname.setBounds(282, 34, 86, 20);
+		panel_3.add(textFieldUserSurname);
+		
+		textFieldUserNickname = new JTextField();
+		textFieldUserNickname.setText((String) null);
+		textFieldUserNickname.setColumns(10);
+		textFieldUserNickname.setBounds(112, 66, 86, 20);
+		panel_3.add(textFieldUserNickname);
+		
+		textFieldUserPassword = new JTextField();
+		textFieldUserPassword.setText("");
+		textFieldUserPassword.setColumns(10);
+		textFieldUserPassword.setBounds(282, 66, 86, 20);
+		panel_3.add(textFieldUserPassword);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				updatePlayerProfile();
+				loadComboBox();
+				
+			}
+		});
+		btnUpdate.setBounds(271, 154, 97, 23);
+		panel_3.add(btnUpdate);
 		updateProfilInfo();
+		loadComboBox();
+		
 	}
 }

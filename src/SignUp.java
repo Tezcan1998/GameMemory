@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 
@@ -16,6 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
 import com.mysql.*;
 import java.sql.*;
+import java.util.ArrayList;
 public class SignUp extends JFrame {
 
 	private JPanel contentPane;
@@ -228,7 +230,9 @@ public class SignUp extends JFrame {
 		panel.add(textFieldMail);
 		
 		String mailtype[]= {"hotmail.com","gmail.com","yahoo.com"};
+		
 		comboBoxMailType = new JComboBox(mailtype);
+		
 		comboBoxMailType.setBounds(356, 14, 86, 20);
 		
 		panel.add(comboBoxMailType);
