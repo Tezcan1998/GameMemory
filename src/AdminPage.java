@@ -97,11 +97,12 @@ public class AdminPage extends JFrame {
 	
 	public void updatePlayerProfile()
 	{
+		db.updatePlayerProfile(comboBox.getSelectedIndex(),player,textFieldUserPassword.getText());
 		textFieldUserName.setText("");
 		textFieldUserSurname.setText("");
 		textFieldUserNickname.setText("");
 		textFieldUserPassword.setText("");
-		db.updatePlayerProfile(selectedIndex,player,textFieldUserPassword.getText());
+		
 		
 	}
 	public void loadComboBox()

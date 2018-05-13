@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class AdminConnection extends SQLiteConnection {
 	            		super.getUser().setAge(rs.getInt("AdminAge"));
 	            		super.getUser().setCountry(rs.getString("AdminCountry"));
 	            		super.getUser().setMail(rs.getString("AdminMail"));
+	            		
 	                    break;
 	                    
 	            	}
@@ -132,7 +134,8 @@ public class AdminConnection extends SQLiteConnection {
 	            		user.setName(rs.getString("UserName"));
 	            		user.setSurname(rs.getString("UserSurname"));
 	            		user.setId(rs.getInt("UserId"));
-	            		
+	            		user.setMail(rs.getString("UserMail"));
+	            	
 	                    break;
 	                    
 	            	}
@@ -152,25 +155,31 @@ public class AdminConnection extends SQLiteConnection {
 
 		Statement st=null;
 		String sql=null;
+	
+		String mail;
 		try{
 	    		Class.forName("org.sqlite.JDBC");
 	            con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\CAN\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
-	            st=(Statement) con.createStatement();
-	            System.out.println("id"+user.getId());
+	            st=(Statement) con.createStatement();  
+	            mail=user.getMail();
+	            System.out.println("mail"+mail);
+	          
 	    		if(password.equals(""))
 	    		{
 	    			
-	                sql = ("update players set UserNickname='"+user.getNickname()+"', UserName='"+user.getName()+"',UserSurname='"+user.getSurname()+"' where UserId='"+Integer.toString(user.getId())+"'");
-	
+	    			System.out.println("No :"+user.getId());
+	                sql = ("update players set UserNickname='"+user.getNickname()+"', UserName='"+user.getName()+"',UserSurname='"+user.getSurname()+"' where  UserMail=+'"+mail+"' ");
+	                st.executeUpdate(sql);
 	    		}
 	    		else
 	    		{
-	    			
-	                sql = ("update players set UserNickname='"+user.getNickname()+"', UserName='"+user.getName()+"',UserSurname='"+user.getSurname()+"',UserPassword='"+password+"' where UserId='"+Integer.toString(user.getId())+"' ");
-	
+	    			System.out.println("Yes :");
+	                sql = ("update players set UserNickname='"+user.getNickname()+"', UserName='"+user.getName()+"',UserSurname='"+user.getSurname()+"',UserPassword='"+password+"' where UserMail='"+Integer.toString(user.getId())+"' ");
+	                st.executeUpdate(sql);
 	    		}
+			
 	    		
-	    			st.executeUpdate(sql);
+	    		
 	    		
 		         st.close();
 			     con.close();
@@ -179,5 +188,7 @@ public class AdminConnection extends SQLiteConnection {
              e.printStackTrace();
         	}
 		
-	}
+	
+}
+	
 }

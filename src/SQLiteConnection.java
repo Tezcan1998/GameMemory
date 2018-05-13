@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public abstract class SQLiteConnection implements ProfileInfo  {
 	private User user;
@@ -19,6 +20,8 @@ public abstract class SQLiteConnection implements ProfileInfo  {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	public void loadHighScores(ArrayList<String> list) {}
 
 	
 	

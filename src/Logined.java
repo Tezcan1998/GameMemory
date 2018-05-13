@@ -31,7 +31,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JRadioButton;
+import java.awt.Font;
 
 public class Logined extends JFrame {
 
@@ -45,9 +48,14 @@ public class Logined extends JFrame {
 	private JTextField textFieldAge;
 	private JTextField textFieldPassword;
 	private JLabel lblDisplayedName,lblDisplayedNickname,lblDisplayedSurname,lblDisplayedAge,lblDisplayedCountry,lblDisplayedMail;
-	
-	
 	private JTextField textFieldCountry;
+	private JLabel label_1,label_2,label_3,label_4;
+	
+	public Logined getReference()
+	{
+		return this;
+	}
+	
 
 	public void updateProfilInfo()  {
 		
@@ -81,6 +89,39 @@ public class Logined extends JFrame {
 		db.updateProfile(user,textFieldPassword.getText() );
 		updateProfilInfo();
 		JOptionPane.showMessageDialog(null,"Update Successfull");
+		
+	}
+	
+	
+	public void loadHighScores()
+	{
+		ArrayList<String> list=new ArrayList<String>();
+		label_1.setText(Integer.toString(user.getHighscore()));
+		SQLiteConnection db=new PlayerConnection();
+		db.loadHighScores(list);
+		
+		if(list.size()==1)
+		{
+			label_2.setText(list.get(0));
+		}
+		else if(list.size()==2)
+		{
+			label_2.setText(list.get(0));
+			label_3.setText(list.get(1));
+		}
+		else if(list.size()==3)
+		{
+			label_2.setText(list.get(0));
+			label_3.setText(list.get(1));
+			label_4.setText(list.get(2));
+			
+		}
+		else {
+			
+		}
+		
+		
+		
 		
 	}
 	
@@ -243,12 +284,99 @@ public class Logined extends JFrame {
 		
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("High Scores", null, panel_3, null);
+		panel_3.setLayout(null);
+		
+		JLabel lblYourScore = new JLabel("Your Score   :");
+		lblYourScore.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		lblYourScore.setBounds(10, 11, 185, 60);
+		panel_3.add(lblYourScore);
+		
+		JLabel lblHighestScore = new JLabel("Highest Score   :");
+		lblHighestScore.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		lblHighestScore.setBounds(10, 76, 185, 35);
+		panel_3.add(lblHighestScore);
+		
+		JLabel lblSecondScore = new JLabel("Second's Score :");
+		lblSecondScore.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		lblSecondScore.setBounds(10, 122, 175, 35);
+		panel_3.add(lblSecondScore);
+		
+		JLabel lblThirdScore = new JLabel("Third's Score    :");
+		lblThirdScore.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		lblThirdScore.setBounds(10, 168, 192, 35);
+		panel_3.add(lblThirdScore);
+		
+		label_1 = new JLabel("");
+		label_1.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		label_1.setBounds(195, 11, 175, 60);
+		panel_3.add(label_1);
+		
+		label_2 = new JLabel("");
+		label_2.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		label_2.setBounds(195, 76, 175, 35);
+		panel_3.add(label_2);
+		
+		label_3 = new JLabel("");
+		label_3.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		label_3.setBounds(195, 122, 175, 35);
+		panel_3.add(label_3);
+		
+        label_4 = new JLabel("");
+		label_4.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		label_4.setBounds(195, 168, 175, 35);
+		panel_3.add(label_4);
 		
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Play Game", null, panel_4, null);
 		panel_4.setLayout(null);
 		
 		
+		JRadioButton radioButtonAnimal = new JRadioButton("");
+		radioButtonAnimal.setBounds(131, 115, 21, 23);
+		panel_4.add(radioButtonAnimal);
+		
+		JRadioButton radioButtonFlower = new JRadioButton("");
+		radioButtonFlower.setBounds(272, 115, 21, 23);
+		panel_4.add(radioButtonFlower);
+		
+		JButton btnPlay = new JButton("Play");
+		btnPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if(radioButtonAnimal.isSelected())
+				{
+					Game game=new Game(getReference(),user,"AnimalType");
+					game.setVisible(true);
+				}
+				else if(radioButtonFlower.isSelected())
+				{
+					Game game=new Game(getReference(),user,"FlowerType");
+					game.setVisible(true);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Please select a game type","Unseccessfull Play",JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
+		});
+		btnPlay.setBounds(168, 156, 105, 33);
+		panel_4.add(btnPlay);
+		
+		
+		
+		JLabel lblAnimal = new JLabel("Animal");
+		lblAnimal.setFont(new Font("Sylfaen", Font.PLAIN, 24));
+		lblAnimal.setBounds(99, 70, 87, 38);
+		panel_4.add(lblAnimal);
+		
+		JLabel lblFlower = new JLabel("Flower");
+		lblFlower.setFont(new Font("Sylfaen", Font.PLAIN, 24));
+		lblFlower.setBounds(241, 70, 79, 38);
+		panel_4.add(lblFlower);
+		
+		
 		updateProfilInfo();
+		loadHighScores();
 	}
 }

@@ -1,6 +1,8 @@
 
 public class Player extends User {
 
-	public Player() {super();}
+	public Player() {super(); }
+	
+	
 
 }

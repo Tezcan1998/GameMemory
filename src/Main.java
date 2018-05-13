@@ -82,7 +82,7 @@ public class Main extends JFrame {
 				{
 					db=new AdminConnection(new Admin());
 					
-					System.out.println("here");
+					
 					if(db.connectSQLite(getTextFieldUsername().getText(), String.valueOf(getPasswordFieldUser().getPassword())))
 					{
 						JOptionPane.showMessageDialog(null,"Access Successfull");

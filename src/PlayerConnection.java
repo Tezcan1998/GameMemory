@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class PlayerConnection extends SQLiteConnection{
 	private static Connection con;
@@ -40,6 +41,7 @@ public class PlayerConnection extends SQLiteConnection{
 	            		super.getUser().setAge(rs.getInt("UserAge"));
 	            		super.getUser().setCountry(rs.getString("UserCountry"));
 	            		super.getUser().setMail(rs.getString("UserMail"));
+	            		super.getUser().setHighscore(rs.getInt("UserHighscore"));
 	                    break;
 	                    
 	            	}
@@ -89,7 +91,35 @@ public class PlayerConnection extends SQLiteConnection{
 		
 	}
 	
+	public void loadHighScores(ArrayList<String> list) 
+	{
+		
+    	try{
+    		Class.forName("org.sqlite.JDBC");
+            
+    		con=(Connection) DriverManager.getConnection("jdbc:sqlite:C:\\Users\\CAN\\eclipse-workspace\\MemoryGame\\SQLite\\gamedb.sqlite");
+            System.out.println("first con :"+con);
+            Statement st=(Statement) con.createStatement();
+            String sql = ("select * from players order by UserHighscore desc;");
+            ResultSet rs = st.executeQuery(sql);
+	            for(int i=0;i<3 && rs.next();i++) {
+	            	
+	            	list.add(rs.getString("UserNickname")+"-"+Integer.toString(rs.getInt("UserHighscore")));
+	            	
+	                    
+	            	}
+	            	
+	        
+	           
+	        rs.close();
+            st.close();
+	        con.close();
+        	}
+        	catch(Exception e){
+             e.printStackTrace();
+        	}
 	
+	}
 	
 
 	

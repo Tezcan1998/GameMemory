@@ -7,6 +7,8 @@ public abstract class User  {
 	private int age;
 	private String country;
 	private String mail;
+	private int highscore;
+	
 	private SQLiteConnection db;
 	
 	
@@ -19,10 +21,12 @@ public abstract class User  {
 		this.age = 0;
 		this.country = "unknown";
 		this.mail = "unknown";
+		this.highscore=0;
 		this.db=null;
+		
 	}
 	
-	public User(int id, String nickname, String name, String surname, int age, String country, String mail,SQLiteConnection db) {
+	public User(int id, String nickname, String name, String surname, int age, String country, String mail,int highscore,SQLiteConnection db) {
 		
 		this.id = id;
 		this.nickname = nickname;
@@ -31,6 +35,7 @@ public abstract class User  {
 		this.age = age;
 		this.country = country;
 		this.mail = mail;
+		this.highscore=highscore;
 		this.db=db ;
 	}
 	
@@ -78,6 +83,13 @@ public abstract class User  {
 	}
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+	
+	public int getHighscore() {
+		return highscore;
+	}
+	public void setHighscore(int highscore) {
+		this.highscore = highscore;
 	}
 	
 
